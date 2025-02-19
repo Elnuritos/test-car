@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prices', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('configuration_id')->constrained('configurations')->onDelete('cascade');
             $table->decimal('price', 10, 2);
             $table->timestamp('start_date');
