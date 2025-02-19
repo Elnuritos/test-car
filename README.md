@@ -1,66 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Cars API V1
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/yourusername/your-repo)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-## About Laravel
+## Описание
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Cars API V1 — это RESTful API для управления автомобилями, их комплектациями, опциями и ценами. API включает стандартные CRUD-операции для всех сущностей и публичный метод для получения списка автомобилей с актуальными комплектациями и ценами. В проекте используются:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Laravel 11+** для бэкенда
+- **PostgreSQL** в качестве СУБД
+- **Redis** для кеширования публичного метода `/api/cars/available`
+- **Swagger (L5-Swagger)** для документации API
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Функциональные возможности
 
-## Learning Laravel
+- CRUD-операции для:
+  - **Автомобиль (Car)**
+  - **Опция (Option)**
+  - **Комплектация (Configuration)**
+  - **Цена (Price)**
+- Публичный API-метод:  
+  **GET /api/cars/available**  
+  Возвращает список автомобилей с актуальными комплектациями, их опциями и действующими ценами на текущий момент.  
+  Пример ответа:
+  ```json
+  [
+      {
+          "id": 1,
+          "name": "Toyota Camry",
+          "configurations": [
+              {
+                  "id": 10,
+                  "name": "Comfort",
+                  "options": ["Climate Control", "Leather Seats"],
+                  "current_price": 35000
+              },
+              {
+                  "id": 11,
+                  "name": "Premium",
+                  "options": ["Climate Control", "Leather Seats", "Sunroof"],
+                  "current_price": 40000
+              }
+          ]
+      }
+  ]
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# Cars API V1 — Установка и настройка
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Требования
 
-## Laravel Sponsors
+- PHP 8.1+
+- Composer
+- PostgreSQL
+- Redis
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Шаг 1. Клонирование репозитория и установка зависимостей
 
-### Premium Partners
+1. Клонируйте репозиторий:
+   git clone https://github.com/Elnuritos/test-car.git
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
+2. Установите Composer-зависимости:
+   composer install
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Шаг 2. Настройка переменных окружения
 
-## Code of Conduct
+1. Скопируйте файл `.env.example` в `.env`:
+   cp .env.example .env
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. Сгенерируйте ключ приложения:
+   php artisan key:generate
 
-## Security Vulnerabilities
+3. Отредактируйте файл `.env`, указав настройки для базы данных и Redis:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   # Database configuration
+   DB_CONNECTION=pgsql
+   DB_HOST=127.0.0.1
+   DB_PORT=5432
+   DB_DATABASE=your_database_name
+   DB_USERNAME=your_db_username
+   DB_PASSWORD=your_db_password
 
-## License
+   # Redis configuration
+   CACHE_DRIVER=redis
+   REDIS_HOST=127.0.0.1
+   REDIS_PORT=6379
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Шаг 3. Миграции и сидирование базы данных
+
+1. Если база данных ещё не создана, создайте её (например, через командную строку):
+   createdb your_database_name
+   или CREATE DATABASE your_database_name;
+
+2. Запустите миграции и заполните базу тестовыми данными:
+   php artisan migrate:fresh --seed
+
+## Шаг 4. Генерация документации API (Swagger)
+
+
+
+1. Опубликуйте конфигурацию пакета:
+   php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+
+
+
+2. Сгенерируйте документацию:
+   php artisan l5-swagger:generate
+
+3. Документация будет доступна по адресу:
+   http://localhost:8000/api/documentation
+
+
+
+## Шаг 5. Запуск локального сервера
+
+Запустите сервер командой:
+   php artisan serve
+
+API будет доступно по адресу, например:
+   http://localhost:8000/api/v1/cars
+
+
+## Шаг 8. Запуск теста(пок успел 1)
+
+Проверьте корректность работы проекта:
+   php artisan test
+
+--------------------------------------------------
+
+
